@@ -1,0 +1,139 @@
+/* PDF Export Styles - Designed specifically for reliable PDF output */
+
+@media print {
+    /* Show ALL slides in print mode, not just the active one */
+    .slide {
+        display: block !important;
+        height: 100vh !important; 
+        page-break-after: always !important;
+        page-break-before: auto !important;
+        page-break-inside: avoid !important;
+        overflow: hidden !important;
+        background-color: #0D0D13 !important;
+        position: relative !important;
+        padding: 80px 40px 40px !important; /* Added top padding for header space */
+        box-sizing: border-box !important;
+    }
+    
+    /* Hide controls in print */
+    .controls,
+    .progress-container,
+    .help-icon,
+    .help-panel {
+        display: none !important;
+    }
+    
+    /* Reposition header for better spacing */
+    .slide-header {
+        position: absolute !important;
+        top: 20px !important;
+        left: 40px !important;
+        right: 40px !important;
+        width: calc(100% - 80px) !important;
+        z-index: 100 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Reset slide content container */
+    .slide-content {
+        max-height: none !important; 
+        overflow: visible !important;
+        margin: 0 auto !important;
+        padding-top: 20px !important;
+    }
+    
+    /* Ensure colors print properly */
+    * {
+        color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Set colors explicitly */
+    body, html {
+        background-color: #0D0D13 !important;
+        color: #FFFFFF !important;
+    }
+    
+    h1, h2, h3 {
+        color: #FFFFFF !important;
+    }
+    
+    h4,
+    .emphasis,
+    .metric-value,
+    th,
+    .team-role,
+    .subtitle {
+        color: #D4E8C1 !important;
+    }
+    
+    /* Adjust spacing of headings */
+    h2 {
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* Fixed footer positioning */
+    .slide-footer {
+        position: absolute !important;
+        bottom: 20px !important;
+        left: 40px !important;
+        right: 40px !important;
+        width: calc(100% - 80px) !important;
+    }
+    
+    /* Fixed page numbers */
+    .page-number {
+        position: absolute !important;
+        bottom: 20px !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+    
+    /* Size paper properly */
+    @page {
+        size: landscape;
+        margin: 0.5cm;
+    }
+}
+
+/* Additional print styles for images */
+@media print {
+    /* Fix logo positioning */
+    .logo {
+        height: 40px !important;
+        display: block !important;
+        filter: brightness(0) invert(1) !important;
+    }
+    
+    .logo-large {
+        width: 180px !important;
+        height: auto !important;
+        margin-bottom: 30px !important;
+        display: block !important;
+        filter: brightness(0) invert(1) !important;
+    }
+    
+    /* Fix team images */
+    .team-img {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    /* Improve table visibility */
+    table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+    }
+    
+    td, th {
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 8px !important;
+    }
+    
+    /* Make sure everything is visible */
+    .slide * {
+        visibility: visible !important;
+    }
+}
