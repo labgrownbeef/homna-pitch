@@ -6,9 +6,9 @@
     <title>HOMNA - GP Investment Opportunity</title>
     <link rel="stylesheet" href="styles_updated.css">
     <link rel="stylesheet" href="print.css" media="print">
-    <link rel="stylesheet" href="print-for-pdf.css" media="print">
     <style>
         @media print {
+            /* Basic setup */
             body, html {
                 width: 100% !important;
                 height: 100% !important;
@@ -17,8 +17,11 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
+            /* Fix slide layout */
             .slide {
                 background-color: #0D0D13 !important;
                 box-shadow: none !important;
@@ -30,11 +33,32 @@
                 height: 100vh !important;
                 position: relative !important;
                 box-sizing: border-box !important;
+                padding: 80px 40px 40px !important; /* More top padding for header */
             }
             
+            /* Adjust slide header */
+            .slide-header {
+                position: absolute !important;
+                top: 20px !important;
+                left: 40px !important;
+                right: 40px !important;
+                width: calc(100% - 80px) !important;
+                z-index: 100 !important;
+            }
+            
+            /* Adjust slide content */
+            .slide-content {
+                max-height: none !important;
+                overflow: visible !important;
+                padding-top: 0 !important;
+                margin: 0 auto !important;
+            }
+            
+            /* Logo fixes */
             img[src="HomnaWhite.png"] {
                 display: block !important;
                 max-height: 40px !important;
+                filter: brightness(0) invert(1) !important;
             }
             
             /* Hide navigation in print */
@@ -51,6 +75,24 @@
             .highlight-box, .metric-card, .team-card {
                 background-color: rgba(255, 255, 255, 0.05) !important;
                 border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+            
+            /* Adjust footer placement */
+            .slide-footer {
+                position: absolute !important;
+                bottom: 20px !important;
+                left: 40px !important;
+                right: 40px !important;
+                width: calc(100% - 80px) !important;
+            }
+            
+            /* Fix page number position */
+            .page-number {
+                position: absolute !important;
+                bottom: 20px !important;
+                width: 100% !important;
+                text-align: center !important;
+                z-index: 10 !important;
             }
             
             /* Page setup */
@@ -1055,6 +1097,9 @@
             
             // Print button with preparation for PDF export
             printBtn.addEventListener('click', function() {
+                // Store the current slide to restore later
+                const activeSlideNumber = currentSlide;
+                
                 // Add printing class to body to trigger print-specific styles
                 document.body.classList.add('printing');
                 
@@ -1089,6 +1134,23 @@
                     window.print();
                     
                     // Reset after print dialog closes
+                    window.addEventListener('afterprint', function resetAfterPrinting() {
+                        // Reset all slide styles
+                        document.body.classList.remove('printing');
+                        slides.forEach(function(slide) {
+                            slide.style.display = '';
+                            slide.style.pageBreakAfter = '';
+                            slide.style.pageBreakInside = '';
+                        });
+                        
+                        // Show active slide again
+                        showSlide(activeSlideNumber);
+                        
+                        // Remove this one-time listener
+                        window.removeEventListener('afterprint', resetAfterPrinting);
+                    });
+                    
+                    // Backup reset method with timeout
                     setTimeout(function() {
                         document.body.classList.remove('printing');
                         slides.forEach(function(slide) {
@@ -1096,7 +1158,7 @@
                             slide.style.pageBreakAfter = '';
                             slide.style.pageBreakInside = '';
                         });
-                        showSlide(currentSlide);
+                        showSlide(activeSlideNumber);
                     }, 1000);
                 }, 200);
             });
