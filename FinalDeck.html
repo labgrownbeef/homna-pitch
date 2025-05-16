@@ -6,28 +6,57 @@
     <title>HOMNA - GP Investment Opportunity</title>
     <link rel="stylesheet" href="styles_updated.css">
     <link rel="stylesheet" href="print.css" media="print">
+    <link rel="stylesheet" href="print-for-pdf.css" media="print">
     <style>
         @media print {
             body, html {
                 width: 100% !important;
                 height: 100% !important;
-                overflow: hidden !important;
+                overflow: visible !important;
                 background-color: #0D0D13 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
             
             .slide {
                 background-color: #0D0D13 !important;
                 box-shadow: none !important;
                 page-break-after: always !important;
+                page-break-before: auto !important;
                 page-break-inside: avoid !important;
+                break-inside: avoid !important;
                 display: block !important;
+                height: 100vh !important;
+                position: relative !important;
+                box-sizing: border-box !important;
             }
             
             img[src="HomnaWhite.png"] {
                 display: block !important;
                 max-height: 40px !important;
+            }
+            
+            /* Hide navigation in print */
+            .controls, .progress-container, .help-icon, .help-panel {
+                display: none !important;
+            }
+            
+            /* Make text colors explicit for print */
+            h1, h2, h3 { color: #FFFFFF !important; }
+            h4, .emphasis, .subtitle, .metric-value { color: #D4E8C1 !important; }
+            p, li, td { color: #E5E7EB !important; }
+            
+            /* Make backgrounds explicit */
+            .highlight-box, .metric-card, .team-card {
+                background-color: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+            
+            /* Page setup */
+            @page {
+                size: landscape;
+                margin: 0.5cm;
             }
         }
     </style>
@@ -1026,6 +1055,9 @@
             
             // Print button with preparation for PDF export
             printBtn.addEventListener('click', function() {
+                // Add printing class to body to trigger print-specific styles
+                document.body.classList.add('printing');
+                
                 // Force all logos to display properly before printing
                 document.querySelectorAll('img[src="HomnaWhite.png"]').forEach(function(img) {
                     img.style.display = 'block';
@@ -1039,11 +1071,34 @@
                 // Force background colors to display in print
                 document.documentElement.style.setProperty('-webkit-print-color-adjust', 'exact');
                 document.documentElement.style.setProperty('print-color-adjust', 'exact');
+                document.documentElement.style.setProperty('color-adjust', 'exact');
+                
+                // Set explicit body background color
+                document.body.style.backgroundColor = '#0D0D13';
+                
+                // Create a fixed header and footer for each page
+                slides.forEach(function(slide) {
+                    // Force display to ensure printing
+                    slide.style.display = 'block';
+                    slide.style.pageBreakAfter = 'always';
+                    slide.style.pageBreakInside = 'avoid';
+                });
                 
                 // Allow a moment for styles to apply before printing
                 setTimeout(function() {
                     window.print();
-                }, 100);
+                    
+                    // Reset after print dialog closes
+                    setTimeout(function() {
+                        document.body.classList.remove('printing');
+                        slides.forEach(function(slide) {
+                            slide.style.display = '';
+                            slide.style.pageBreakAfter = '';
+                            slide.style.pageBreakInside = '';
+                        });
+                        showSlide(currentSlide);
+                    }, 1000);
+                }, 200);
             });
             
             // Fullscreen button
